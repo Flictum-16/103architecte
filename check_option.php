@@ -16,6 +16,7 @@ include 'Transformation.php';
 
 if (count($argv) > 4) 
 {
+	$Homo_mat = array(array(1.000, 0.000, 0.000), array(0.000, 1.000, 0.000), array(0.000, 0.000, 1.000));
 	for ($i = 3; $i < count($argv);)
 	{
 		if (!strcmp("T", $argv[$i]))
@@ -27,7 +28,7 @@ if (count($argv) > 4)
 			}
 			if ((is_numeric($argv[$i + 1]) === true) && (is_numeric($argv[$i + 2])=== true))
 			{
-				v_translation($argv[1], $argv[2], $argv[$i + 1], $argv[$i + 2]);
+				$Homo_mat = v_translation($argv[1], $argv[2], $argv[$i + 1], $argv[$i + 2], $Homo_mat);
 				$i = $i + 3;
 			}
 			else
@@ -45,7 +46,7 @@ if (count($argv) > 4)
 			}
 			if ((is_numeric($argv[$i + 1]) === true) && (is_numeric($argv[$i + 2])=== true))
 			{
-				v_homothetie($argv[1], $argv[2], $argv[$i + 1], $argv[$i + 2]);
+				$Homo_mat = v_homothetie($argv[1], $argv[2], $argv[$i + 1], $argv[$i + 2], $Homo_mat);
 				$i = $i + 3;
 			}
 			else
@@ -63,7 +64,7 @@ if (count($argv) > 4)
 			}
 			if ((is_numeric($argv[$i + 1]) === true))
 			{
-				v_rotate($argv[1], $argv[2], $argv[$i + 1]);
+				$Homo_mat = v_rotate($argv[1], $argv[2], $argv[$i + 1], $Homo_mat);
 				$i = $i + 2;
 			}
 			else
@@ -81,7 +82,7 @@ if (count($argv) > 4)
 			}
 			if ((is_numeric($argv[$i + 1]) === true))
 			{
-				v_symetric($argv[1], $argv[2], $argv[$i + 1]);
+				$Homo_mat = v_symetric($argv[1], $argv[2], $argv[$i + 1], $Homo_mat);
 				$i = $i + 2;
 			}
 			else
@@ -96,6 +97,7 @@ if (count($argv) > 4)
 			exit(6);
 		}
 	}
+	print_m($Homo_mat);
 }
 else
 {
