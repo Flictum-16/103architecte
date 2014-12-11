@@ -1,6 +1,6 @@
 <?php
 
- /*
+ 	/*
 	check_option.php for  in /home/bertra_v/tek_1/Maths/103architecte
    
 	Made by Florent Bertrand
@@ -8,27 +8,28 @@
    
 	Started on  Mon Dec  8 14:14:35 2014 Florent Bertrand
  	Last update Mon Dec  8 14:45:22 2014 Florent Bertrand
-*/
+	*/
 
 include 'Transformation.php';
 
-// check option  
+// check les options passés en paramètre, création matrice finale et affichage des résultats 
 
 if (count($argv) > 4) 
 {
-	$Homo_mat = array(array(1.000, 0.000, 0.000), array(0.000, 1.000, 0.000), array(0.000, 0.000, 1.000));
+	$matrix_u = array(array(1.000, 0.000, 0.000), array(0.000, 1.000, 0.000), array(0.000, 0.000, 1.000));
 	for ($i = 3; $i < count($argv);)
 	{
 		if (!strcmp("T", $argv[$i]))
 		{
 			if (empty($argv[$i + 1]) == true || empty($argv[$i + 2]) == true)
 			{
-				echo "Please put a parameter to use 'T' option";
+				echo "Please put two parameter to use 'T' option";
 				exit(0);
 			}
 			if ((is_numeric($argv[$i + 1]) === true) && (is_numeric($argv[$i + 2])=== true))
 			{
-				$Homo_mat = v_translation($argv[1], $argv[2], $argv[$i + 1], $argv[$i + 2], $Homo_mat);
+				$matrix_t = v_translation($argv[$i + 1], $argv[$i + 2]);
+				$matrix_u = matrix_product($matrix_u, $matrix_t);
 				$i = $i + 3;
 			}
 			else
@@ -46,7 +47,8 @@ if (count($argv) > 4)
 			}
 			if ((is_numeric($argv[$i + 1]) === true) && (is_numeric($argv[$i + 2])=== true))
 			{
-				$Homo_mat = v_homothetie($argv[1], $argv[2], $argv[$i + 1], $argv[$i + 2], $Homo_mat);
+				$matrix_h = v_homothetie($argv[$i + 1], $argv[$i + 2]);
+				$matrix_u = matrix_product($matrix_u, $matrix_h);
 				$i = $i + 3;
 			}
 			else
@@ -59,12 +61,13 @@ if (count($argv) > 4)
 		{
 			if (empty($argv[$i + 1]) == true)
 			{
-				echo "Please put two parameters to use 'R' option";
+				echo "Please put a parameters to use 'R' option";
 				exit(4);
 			}
 			if ((is_numeric($argv[$i + 1]) === true))
 			{
-				$Homo_mat = v_rotate($argv[1], $argv[2], $argv[$i + 1], $Homo_mat);
+				$matrix_r = v_rotate($argv[$i + 1], $matrix_u);
+				$matrix_u = matrix_product($matrix_u, $matrix_r);
 				$i = $i + 2;
 			}
 			else
@@ -82,7 +85,8 @@ if (count($argv) > 4)
 			}
 			if ((is_numeric($argv[$i + 1]) === true))
 			{
-				$Homo_mat = v_symetric($argv[1], $argv[2], $argv[$i + 1], $Homo_mat);
+				$matrix_s = v_symetric($argv[$i + 1], $matrix_u);
+				$matrix_u = matrix_product($matrix_u, $matrix_s);
 				$i = $i + 2;
 			}
 			else
@@ -97,12 +101,15 @@ if (count($argv) > 4)
 			exit(6);
 		}
 	}
-	print_m($Homo_mat);
+	$x_point =  $argv[1] * $matrix_u[0][0] + $argv[2] * $matrix_u[1][0] + 1 * $matrix_u[2][0];
+ 	$y_point =  $argv[1] * $matrix_u[0][1] + $argv[2] * $matrix_u[1][1] + 1 * $matrix_u[2][1];
+  	$z_point =  $argv[1] * $matrix_u[0][2] + $argv[2] * $matrix_u[1][2] + 1 * $matrix_u[2][2];
+	print_m($matrix_u);
+	echo "(".$argv[1].",".$argv[2].") => (".number_format($x_point, 3).",".number_format($y_point, 3).")";
 }
 else
 {
 	echo "Usage : {./103architecte} {point1} {point2} {Option} {argument's option}";
 	exit(7);
 }
-
 ?>
